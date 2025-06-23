@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <math.h>
 
 const int NUMSIZE = 5;
 const int MAX_FILE = 1000;
