@@ -2,8 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
-const int MAX_SIZE = 5;
+const int NUMSIZE = 5;
+const int MAX_FILE = 1000;
 
 int compare(const void* a, const void* b) {
     int result = *(int*)a-*(int*)b;
@@ -12,8 +14,15 @@ int compare(const void* a, const void* b) {
         else return 1;
     }
 
-int main(void) {
+int intpow(int base, int exp) {
+    int result = 1;
+    for (int i = 0; i < exp; i++) {
+        result *= base;
+    }
+    return result;
+}
 
+int main(void) {
 
     FILE *file;
     file = fopen("input.txt", "r");
@@ -23,53 +32,44 @@ int main(void) {
     return 1;
     }
 
+    int index = 0;
+
     char buff[24];
     char r_list_buff[24];
     char l_list_buff[24];
 
-    int r_list_ints[MAX_SIZE];
-    int l_list_ints[MAX_SIZE];
+    int r_list_ints[MAX_FILE];
+    int l_list_ints[MAX_FILE];
 
     int sum = 0;
-    while((fgets(buff, 24, file) != NULL)) {
 
-        strncpy(r_list_buff, buff, MAX_SIZE);
-        strncpy(l_list_buff, buff+8, MAX_SIZE);
+    while((fgets(buff, sizeof(buff), file) != NULL)) {
 
-        for(int i = 0; i < MAX_SIZE; i++) {
-            r_list_ints[i] = r_list_buff[i]-'0';
-            l_list_ints[i] = l_list_buff[i]-'0';
+        strncpy(r_list_buff, buff, NUMSIZE);
+        strncpy(l_list_buff, buff+8, NUMSIZE);
+
+        int lnum, rnum;
+        lnum = rnum = 0;
+        for(int i = NUMSIZE-1, j = 0; i > -1; i--, j++) {
+            
+            lnum+= ((l_list_buff[j]-'0') * intpow(10, i));
+            rnum+= ((r_list_buff[j]-'0') * intpow(10, i));
         }
 
-        
-        qsort(r_list_ints, MAX_SIZE, sizeof(int), compare);
-        qsort(l_list_ints, MAX_SIZE, sizeof(int), compare);
+        r_list_ints[index] = rnum;
+        l_list_ints[index] = lnum;
+        index++;
+    }
 
-        // for(int i = 0; i < 5; i++) {
-        //     printf("%d ", r_list_ints[i]);
-        // }
+    qsort(r_list_ints, MAX_FILE, sizeof(int), compare);
+    qsort(l_list_ints, MAX_FILE, sizeof(int), compare);
 
-        // printf("\n");
-
-        // for(int i = 0; i < 5; i++) {
-        //     printf("%d ", l_list_ints[i]);
-        // }
-
-        // printf("\n");
-
-        int lnsum = 0;
-        for (int i = 0; i < MAX_SIZE; i++) {
-            int ans = r_list_ints[i] - l_list_ints[i];
-            if (ans < 0) ans *= -1;
-            sum += ans;
-        }
-        // printf("lnsum is: %d\n", lnsum);
-        // printf("sum is: %d\n", sum);
-
+    for(int i = 0; i < MAX_FILE; i++) {
+        int ans = r_list_ints[i] - l_list_ints[i];
+        if (ans < 0) ans *= -1;
+        sum+=ans;
     }
 
     printf("%d\n", sum);
-    // printf("%d", lncount);
-
     return 0;
 }
