@@ -12,15 +12,24 @@ def issafe_level(diff, state) :
     return True
 
 def consider_removing(index, report):
+    print("considerint " + str(index))
     temp_list = (report.copy())
     temp_list.pop(index)
     print(temp_list)
-    if (issafe_report(temp_list, True)): return True
-    else: return False
+    return issafe_report(temp_list)
 
-def issafe_report(report, was_called_recurs):
+def consider_all(report):
+    print ("original list: ")
+    print (report)
+    for i in range (len(report)):
+        if consider_removing(i, report):
+            return True
+    return False
+
+def issafe_report(report):
     state = 69
     was_called = False
+    safe_report = True
     for i in range(1, len(report)):
         if i > 0:
             diff = report[i] - report[i-1]
@@ -29,38 +38,29 @@ def issafe_report(report, was_called_recurs):
             elif state == 69 and diff < 0:
                 state = -1
 
-        if not issafe_level(diff, state) and not was_called_recurs and not was_called:
-            if consider_removing(i, report): 
-                print("removing successful")
-                was_called = True
-                print(was_called)
-                continue
-            elif consider_removing(i-1, report): 
-                print("removing successful")
-                was_called = True
-                continue
-            elif i != len(report)-1:
-                print("removing successful")
-                if consider_removing(i+1, report): 
-                    was_called = True
-                    continue
+        # Broken part for part two
+        level_safe = issafe_level(diff, state)
+        if not issafe_level(diff, state):
             return False
-        elif not issafe_level(diff, state) and was_called_recurs:
-            return False
-    return True
+    
+    return safe_report
 
 def main():
-    print("hello world")
     f = open("input.txt", "r")
     safe = 0
     for line in f:
-        print(line)
         report = list(map(int, line.split()))
-         
-        if issafe_report(report, False):
+        print("report")
+        print(report)
+        if issafe_report(report):
             safe+=1
             print("SAFE")
-        else: print("UNSAFE")
+        else: 
+            print("UNSAFE")
+            if consider_all(report):
+                safe += 1
+                print("SUCESSFUL REMOVAL")
+            else: print("STILL UNSAFE")
     print(safe)
 
 main()
