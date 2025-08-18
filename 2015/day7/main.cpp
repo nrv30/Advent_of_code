@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <cstdint>
+#include <cstdlib>
 
 using namespace std;
 
@@ -38,12 +39,12 @@ void tokenize(string line, map<string, WIRE>* signals) {
     }
     string first_token = toks[0];
 
-    if (first_token == "NOT") 
-    {
+
+    if (first_token == "NOT") {
         signals->insert({toks[3], (WIRE) {.gate = NOT, 
                                           .a = toks[1],
                                           .has_signal = false}});
-    } else if (isdigit(first_token[0]) == 0 && isupper(toks[1])) {
+    } else if (isupper(toks[1][0])) {
         GATES temp;
         string gates_token = toks[1];
         if (gates_token == "OR") {
@@ -59,17 +60,17 @@ void tokenize(string line, map<string, WIRE>* signals) {
                                           .a = toks[0], 
                                           .b = toks[2],
                                           .has_signal = false}});
-    } else if (isdigit(first_token[0]) == 0 && toks[1] == "->") {
-        signals->insert({toks[2], (WIRE) {.gate = INV,
-                                          .a = toks[0],
-                                          .has_signal = false}});
-    } else {
+    } else if (isdigit(toks[0][0]) != 0) {
         signals->insert({toks[2], (WIRE){.gate = INV, 
                                         .signal = static_cast<uint16_t>(stoi(toks[0])),
                                         .has_signal = true,
                                         }});
+    } else {
+        signals->insert({toks[2], (WIRE) {.gate = INV,
+                                          .a = toks[0],
+                                          .has_signal = false}});
     }
-    
+
 }
 
 uint16_t switch_ops(uint16_t a, uint16_t b, GATES g) {
@@ -87,8 +88,7 @@ uint16_t switch_ops(uint16_t a, uint16_t b, GATES g) {
 }
 
 uint16_t connect_wires(map<string, WIRE>* signals, string key) {
-    cout << "new stackframe" << '\n';
-    WIRE w = signals->find(key)->second;
+    WIRE &w = signals->find(key)->second;
     uint16_t signal;
     if (w.has_signal) {
         return w.signal;
@@ -145,6 +145,8 @@ int main(void) {
     }
 
     in.close();
+    // cout << signals.at("c").signal << '\n';
+    // exit(1);
     uint16_t result = connect_wires(&signals, "a");
     cout << result << "\n";
 
