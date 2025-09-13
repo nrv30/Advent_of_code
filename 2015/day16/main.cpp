@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream> 
 #include <vector>
-#include <cstddef>
 
 using namespace std;
 
@@ -71,7 +70,7 @@ int main(void) {
 			
 			string next_token = tokens[i+1];
 			if (i < tokens_len-2) next_token = next_token.substr(0, next_token.size()-1);
-			// cout << next_token << '\n';
+
 			if (token == "children") {
 				s.children = stoi(next_token);
 			} else if (token == "cats") {
@@ -103,7 +102,6 @@ int main(void) {
 			int s_field = *((int*) &s+i);
 			int target_field = *((int*) &target+i);
 
-			// if (count == 103) print_sue(&s);
 			if (s_field == -1) continue;
 			
 			if (i == 1 || i == 7) {
