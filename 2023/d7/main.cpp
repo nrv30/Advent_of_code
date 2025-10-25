@@ -102,7 +102,7 @@
     				a = card_counts[0]; b = card_counts[1];
     				if (a == 4 && b == 1 || a == 1 && b == 4)
     					ranked_hands.push_back({handstr, FOUR_OF_A_KIND, bid});
-    				else if (a == 3 && b == 2 || a == 2 && a == 3)
+    				else if (a == 3 && b == 2 || a == 2 && b == 3)
     					ranked_hands.push_back({handstr, FULL_HOUSE, bid});
     				break;
     			}
