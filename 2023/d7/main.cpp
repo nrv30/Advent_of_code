@@ -154,3 +154,21 @@ int main(void) {
 
 	cout << sum << '\n';
 }
+
+
+
+/*
+let J be a wildcard...
+K = number of J
+New cards < K
+ABCJJ
+AAABC
+AABBC
+AABCC
+ABBBC
+ABBCC
+ABCCC
+ABCXY
+ABCXX
+ABCYY
+*/
