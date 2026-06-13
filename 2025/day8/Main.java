@@ -1,6 +1,5 @@
 import java.util.*;
 import java.io.*;
-import java.math.*;
 
 public class Main {
 
@@ -15,8 +14,8 @@ public class Main {
 
     public static long dist(Point p1, Point p2) {
         return (long) Math.pow(p1.x-p2.x, 2) + 
-                (long) Math.pow(p1.y-p2.y, 2) + 
-                (long) Math.pow(p1.z-p2.z, 2);
+               (long) Math.pow(p1.y-p2.y, 2) + 
+               (long) Math.pow(p1.z-p2.z, 2);
     }
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -30,7 +29,8 @@ public class Main {
         }
         f.close();
 
-        Solution.solveP1Sort(boxes);
+        Solution.P1(boxes);
+        Solution.P2(boxes);
     }
 
     class Solution {
@@ -43,32 +43,56 @@ public class Main {
             return null;
         }
 
-        static void solveP1Sort(ArrayList<Point>boxes) {
-            ArrayList<Triplet> dists = new ArrayList<>();
+        static void buildPairs(ArrayList<Triplet> pairs, ArrayList<Point> boxes) {
             for (int i = 0; i < boxes.size(); ++i) {
                 for (int j = i+1; j < boxes.size(); ++j) {
-                    //System.out.println(boxes.get(i) + " " + boxes.get(j) + " " + distance(boxes.get(i), boxes.get(j)));
-                    dists.add(new Triplet(dist(boxes.get(i), boxes.get(j)), i, j));
+                    pairs.add(new Triplet(dist(boxes.get(i), boxes.get(j)), i, j));
                 }
             }
+        }
 
-            Collections.sort(dists, null);
-            // for (Triplet t : dists) {
-            //     System.out.println(t);
-            // }
+        static void P2(ArrayList<Point> boxes) {
+            ArrayList<Triplet> pairs = new ArrayList<>();
+            buildPairs(pairs, boxes);
+            Collections.sort(pairs, null);
+
+            ArrayList<HashSet<Integer>> circuits = new ArrayList<>();
+
+            for (int k = 0; ; k++) {
+                Triplet t = pairs.get(k);
+                HashSet<Integer> c1 = getCircuitContainingBox(circuits, t.i);
+                HashSet<Integer> c2 = getCircuitContainingBox(circuits, t.j);
+
+                if (c1 == null && c2 == null) {
+                    circuits.add(new HashSet<Integer>(Arrays.asList(t.i, t.j)));
+                } else if (c1 != null && c2 == null) {
+                    c1.add(t.j);
+                } else if (c2 != null && c1 == null) {
+                    c2.add(t.i);
+                } else  if (c1 != null && c2 != null && !c1.equals(c2)) {
+                    c1.addAll(c2);
+                    circuits.remove(c2);
+                }
+                
+                if (circuits.size() == 1 && circuits.get(0).size() == boxes.size()) {
+                    System.out.println(boxes.get(t.i).x*boxes.get(t.j).x);
+                    break;
+                }
+            }
+        }
+
+        static void P1(ArrayList<Point> boxes) {
+            ArrayList<Triplet> pairs = new ArrayList<>();
+            buildPairs(pairs, boxes);
+            Collections.sort(pairs, null);
+
             ArrayList<HashSet<Integer>> circuits = new ArrayList<>();
 
             int n = 1000;
             for (int k = 0; k < n; k++) {
-                Triplet t = dists.get(k);
-                // System.out.println(boxes.get(t.i) + " " + boxes.get(t.j));
+                Triplet t = pairs.get(k);
                 HashSet<Integer> c1 = getCircuitContainingBox(circuits, t.i);
                 HashSet<Integer> c2 = getCircuitContainingBox(circuits, t.j);
-                // if (c1 != null) {
-                //     System.out.println("c1 " + c1);
-                // } else if (c2 != null) {
-                //     System.out.println("c2 " + c2);
-                // }
 
                 if (c1 == null && c2 == null) {
                     circuits.add(new HashSet<Integer>(Arrays.asList(t.i, t.j)));
@@ -89,13 +113,7 @@ public class Main {
             };
 
             Collections.sort(circuits, customComparator);
-
-            // for (HashSet<Integer> circuit : circuits) {
-            //     System.out.println(circuit);
-            // }
-
             System.out.println(circuits.get(0).size()*circuits.get(1).size()*circuits.get(2).size());
-
         }
     }
 }
