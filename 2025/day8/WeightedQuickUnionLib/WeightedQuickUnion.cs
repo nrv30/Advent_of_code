@@ -74,7 +74,6 @@ public class WeightedQuickUnion<T> {
     public void Print()
     {
         Console.WriteLine(string.Join(" ", parent));
- 
     }
 
     public Tuple<int, int, int> Get3LargestSets()

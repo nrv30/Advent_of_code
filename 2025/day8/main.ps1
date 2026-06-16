@@ -11,8 +11,7 @@ function SqDist {
         return ($dx*$dx + $dy*$dy + $dz*$dz)
     }
 
-[System.Reflection.Assembly]::LoadFile("$PWD\WeightedQuickUnionLib\bin\Debug\net10.0\WeightedQuickUnionLib.dll")
-
+[System.Reflection.Assembly]::load([System.IO.File]::ReadAllBytes("$PWD\WeightedQuickUnionLib\bin\Debug\net10.0\WeightedQuickUnionLib.dll"))
 $boxes = [System.Collections.Generic.List[int[]]]::new()
 $pq    = [System.Collections.Generic.PriorityQueue[[System.Tuple[int32, int32]], int64]]::new() 
     
