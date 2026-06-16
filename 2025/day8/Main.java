@@ -29,8 +29,15 @@ public class Main {
         }
         f.close();
 
+        long startTime = System.nanoTime();
         Solution.P1(boxes);
+        long endTime = System.nanoTime();
+        System.out.println("Solution 1 took " + (endTime-startTime)/(float)1000000000 + " seconds"); 
+
+        startTime = System.nanoTime();
         Solution.P2(boxes);
+        endTime = System.nanoTime();
+        System.out.println("Solution 2 took " + (endTime-startTime)/(float)1000000000 + " seconds"); 
     }
 
     class Solution {

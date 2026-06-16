@@ -23,6 +23,8 @@ $lines | ForEach-Object {
    $boxes.Add($point)
 }
 
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
+
 # a parallel array of indices to boxes
 $boxesIndices = 0..($boxes.Count-1) | ForEach-Object {$_}
 
@@ -66,4 +68,6 @@ if ($args[1] -eq 1) {
     } while ($count -gt 1)
     write-host ($boxes[$i][0]*$boxes[$j][0])
 }
-# $u.Print()
+
+$sw.Stop()
+$sw.Elapsed
