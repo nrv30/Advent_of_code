@@ -3,20 +3,13 @@ using Raylib_cs;
 using System.Numerics;
 using WeightedQuickUnionLib;
 
-// what are the sets with >1 weights
-// the set with the biggest weight will be colored yellow
-// The other sets will have other sets weight > 1
-
-// They should spawn in on-state
-// Add a fade plus sound to off-state
-
-
 // Pop sound
 // Author DRAGON-STUDIO
+// https://pixabay.com/sound-effects/film-special-effects-pop-402324/
 
 // Electricity Sound
-// freesound_community
-
+// Author freesound_community
+// https://pixabay.com/sound-effects/film-special-effects-electricity-106510/
 
 internal static class Program
 {
@@ -65,8 +58,6 @@ internal static class Program
     static bool shouldAdvance;
 
     static List<ValueTuple<Vector3, Vector3>> connectedPairs;
-
-
     static PriorityQueue<ValueTuple<int, int>, int> BuildPairs(List<Vector3> boxes)
     {
         PriorityQueue<ValueTuple<int, int>, int> pqLocal = new PriorityQueue<ValueTuple<int, int>, int>();
@@ -79,7 +70,6 @@ internal static class Program
         }
         return pqLocal;
     }
-
     static List<Vector3> ParseInput(string filepath)
     {
         List<Vector3> boxes = new List<Vector3>();
@@ -179,8 +169,6 @@ internal static class Program
 
     static IEnumerator<Wait> ConnectBoxes(int idx1, int idx2)
     {
-        //float duration = 1 - (float)connectedPairs.Count / (float)boxes.Count;
-        //duration = Raymath.Clamp(duration, .5f, 1);
         float duration = 1.0f;
         float timeElapsed = 0.0f;
         while (timeElapsed < duration)
@@ -266,7 +254,6 @@ internal static class Program
         {
             elementColors[i] = uf.elementColors[i];
         }
-        //elementColors = uf.elementColors.Select(color => color).ToArray();
     }
 
     static void UpdateParentToChildren()
@@ -298,7 +285,6 @@ internal static class Program
         int backY = TitleLabelHeight + backVertPad;
         int backX = backHorzPad;
 
-        // int tableHeaderWidth = backWidth;
         int tableHeadeHeight = 45;
 
         int leftLabelWidth = (int)(0.66 * backWidth);
@@ -328,8 +314,6 @@ internal static class Program
 
         for (int i = 0; i < validCircuits.Count; ++i)
         {
-            // counter * elemHeight + counter* 2* elemVertPad + backY
-            // counter(elemHeight+2*elemVertPad)+backY
             int elemY = backY + tableHeadeHeight + (counter + 1) * elemVertPad + counter * elemHeight;
             Raylib.DrawRectangleLinesEx(new Rectangle(backX+elemHorzPad, elemY, elemWidth, elemHeight), 
                                         4.0f, Color.Black);
